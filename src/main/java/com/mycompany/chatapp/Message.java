@@ -9,9 +9,6 @@ import org.json.JSONObject;
 /**
  * Message class for ChatApp.
  * Handles message validation, hashing, sending, and storage.
- *
- * JSON library attribution:
- * https://mvnrepository.com/artifact/org.json/json
  */
 public class Message {
 
@@ -42,7 +39,7 @@ public class Message {
     }
 
     /**
-     * Generates a random 10-digit ID.
+     * Generates a random 10-digit message ID.
      *
      * @return message ID
      */
@@ -59,20 +56,23 @@ public class Message {
     }
 
     /**
-     * Checks if message ID is valid.
+     * Validates message ID.
      *
-     * @return true if ID length <= 10
+     * @return true if valid
      */
     public boolean checkMessageID() {
 
         return messageID != null
-                && messageID.length() <= 10;
+                && messageID.length() == 10;
     }
 
     /**
      * Validates recipient cell number.
      *
-     * @return validation result message
+     * South African international format:
+     * +27831234567
+     *
+     * @return validation result
      */
     public String checkRecipientCell() {
 
@@ -82,7 +82,8 @@ public class Message {
             return "Cell phone number successfully captured.";
         }
 
-        return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
+        return "Cell phone number is incorrectly formatted "
+                + "or does not contain an international code.";
     }
 
     /**
@@ -93,6 +94,10 @@ public class Message {
      */
     public String checkMessageLength(String message) {
 
+        if (message == null || message.isEmpty()) {
+            return "Message cannot be empty.";
+        }
+
         if (message.length() <= 250) {
             return "Message ready to send.";
         }
@@ -101,34 +106,42 @@ public class Message {
 
         return "Message exceeds 250 characters by "
                 + over
-                + "; please reduce the size.";
+                + " characters.";
     }
 
     /**
      * Creates message hash.
      *
      * Format:
-     * First 2 digits of ID : message number : first word + last word
+     * First 2 digits of ID : message number :
+     * first word + last word
+     *
+     * Example:
+     * 12:0:HELLOWORLD
      *
      * @return message hash
      */
     public String createMessageHash() {
 
+        if (messageText == null || messageText.isBlank()) {
+            return "Cannot create hash. Message is empty.";
+        }
+
         String idPart = messageID.substring(0, 2);
 
-        String[] words = messageText.split(" ");
+        String[] words = messageText.trim().split("\\s+");
 
         String firstWord = words[0];
         String lastWord = words[words.length - 1];
 
-        messageHash = idPart
+        messageHash = (idPart
                 + ":"
                 + messageNumber
                 + ":"
                 + firstWord
-                + lastWord;
+                + lastWord).toUpperCase();
 
-        return messageHash.toUpperCase();
+        return messageHash;
     }
 
     /**
@@ -140,12 +153,14 @@ public class Message {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("What would you like to do with this message?");
+        System.out.println("\nWhat would you like to do?");
         System.out.println("1) Send Message");
         System.out.println("2) Disregard Message");
         System.out.println("3) Store Message to send later");
+        System.out.print("Choose option: ");
 
         int option = scanner.nextInt();
+        scanner.nextLine();
 
         switch (option) {
 
@@ -157,13 +172,15 @@ public class Message {
 
             case 2 -> {
                 sendStatus = "Disregarded";
-                return "Press 0 to delete the message.";
+                return "Message discarded.";
             }
 
             case 3 -> {
                 sendStatus = "Stored";
-                storeMessage();
                 totalMessages++;
+
+                storeMessage();
+
                 return "Message successfully stored.";
             }
 
@@ -176,22 +193,35 @@ public class Message {
     /**
      * Displays message details.
      *
-     * @return formatted message details
+     * @return formatted details
      */
     public String printMessages() {
 
-        return "Message ID: " + messageID
-                + "\nMessage Hash: " + messageHash
-                + "\nRecipient: " + recipient
-                + "\nMessage: " + messageText;
+        return """
+               ------------------------------
+               Message Details
+               ------------------------------
+               Message ID   : %s
+               Message Hash : %s
+               Recipient    : %s
+               Message      : %s
+               Status       : %s
+               ------------------------------
+               """.formatted(
+                messageID,
+                messageHash,
+                recipient,
+                messageText,
+                sendStatus
+        );
     }
 
     /**
-     * Returns total messages.
+     * Returns total messages sent/stored.
      *
-     * @return total message count
+     * @return total messages
      */
-    public int returnTotalMessages() {
+    public static int returnTotalMessages() {
 
         return totalMessages;
     }
@@ -211,8 +241,10 @@ public class Message {
 
         try (FileWriter writer = new FileWriter("messages.json", true)) {
 
-            writer.write(obj.toString());
+            writer.write(obj.toString(4));
             writer.write(System.lineSeparator());
+
+            System.out.println("Message stored in JSON file.");
 
         } catch (IOException e) {
 
@@ -220,7 +252,9 @@ public class Message {
         }
     }
 
+    // =========================
     // Getters and Setters
+    // =========================
 
     public String getMessageID() {
         return messageID;

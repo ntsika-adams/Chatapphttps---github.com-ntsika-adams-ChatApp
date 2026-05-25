@@ -10,9 +10,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // ---------------- PART 1 ----------------
+        // ---------------- PART 1 ----------------//
         try (Scanner scanner = new Scanner(System.in)) {
-            // ---------------- PART 1 ----------------
+            
             Login login = new Login();
             
             System.out.println("=== ChatApp Registration ===");
@@ -53,7 +53,7 @@ public class Main {
             
             // ---------------- PART 2 ----------------
             if (loggedIn) {
-                
+                /*if user has successfully logged in then it will show the next message*/
                 System.out.println("Welcome to ChatApp.");
                 
                 boolean running = true;
