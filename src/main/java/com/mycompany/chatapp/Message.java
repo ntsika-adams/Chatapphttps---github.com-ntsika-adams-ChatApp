@@ -12,6 +12,29 @@ import org.json.JSONObject;
  */
 public class Message {
 
+   public static void displayReport() {
+
+    System.out.println("\n========== MESSAGE REPORT ==========");
+
+    for (int i = 0; i < 100; i++) {
+
+        if (messageHashes[i] != null) {
+
+            System.out.println("----------------------------");
+            System.out.println("Message Hash : " + messageHashes[i]);
+            System.out.println("Recipient    : " + recipients[i]);
+
+            if (sentMessages[i] != null) {
+                System.out.println("Message      : " + sentMessages[i]);
+            }
+
+            if (storedMessages[i] != null) {
+                System.out.println("Message      : " + storedMessages[i]);
+            }
+        }
+    }
+}
+
     private String messageID;
     private int messageNumber;
     private String recipient;
@@ -20,7 +43,19 @@ public class Message {
     private String sendStatus;
 
     private static int totalMessages = 0;
+// Arrays required for Part 3
 
+private static String[] sentMessages = new String[100];
+private static String[] storedMessages = new String[100];
+private static String[] disregardedMessages = new String[100];
+
+private static String[] messageHashes = new String[100];
+private static String[] messageIDs = new String[100];
+private static String[] recipients = new String[100];
+
+private static int sentCount = 0;
+private static int storedCount = 0;
+private static int discardCount = 0;
     /**
      * Default constructor.
      */
@@ -162,34 +197,164 @@ public class Message {
         int option = scanner.nextInt();
         scanner.nextLine();
 
-        switch (option) {
+      switch (option) {
 
-            case 1 -> {
-                sendStatus = "Sent";
-                totalMessages++;
-                return "Message successfully sent.";
-            }
+    case 1 -> {
 
-            case 2 -> {
-                sendStatus = "Disregarded";
-                return "Message discarded.";
-            }
+        sendStatus = "Sent";
 
-            case 3 -> {
-                sendStatus = "Stored";
-                totalMessages++;
+        sentMessages[sentCount] = messageText;
+        messageHashes[sentCount] = messageHash;
+        messageIDs[sentCount] = messageID;
+        recipients[sentCount] = recipient;
 
-                storeMessage();
+        sentCount++;
+        totalMessages++;
 
-                return "Message successfully stored.";
-            }
+        return "Message successfully sent.";
+    }
 
-            default -> {
-                return "Invalid option selected.";
-            }
+    case 2 -> {
+
+        sendStatus = "Disregarded";
+
+        disregardedMessages[discardCount] = messageText;
+
+        discardCount++;
+
+        return "Message discarded.";
+    }
+
+    case 3 -> {
+
+        sendStatus = "Stored";
+
+        storedMessages[storedCount] = messageText;
+        messageHashes[storedCount] = messageHash;
+        messageIDs[storedCount] = messageID;
+        recipients[storedCount] = recipient;
+
+        storedCount++;
+
+        totalMessages++;
+
+        storeMessage();
+
+        return "Message successfully stored.";
+    }
+
+    default -> {
+
+        return "Invalid option.";
+    }
+
+}
+    }
+
+     public static String displayLongestMessage() {
+
+    String longest = "";
+
+    for (int i = 0; i < storedCount; i++) {
+
+        if (storedMessages[i] != null &&
+                storedMessages[i].length() > longest.length()) {
+
+            longest = storedMessages[i];
         }
     }
 
+    if (longest.equals("")) {
+        return "No stored messages.";
+    }
+
+    return longest;
+}
+      public static String searchMessageID(String id) {
+
+    for (int i = 0; i < 100; i++) {
+
+        if (messageIDs[i] != null &&
+                messageIDs[i].equals(id)) {
+
+            String msg = sentMessages[i];
+
+if (msg == null) {
+    msg = storedMessages[i];
+}
+
+return "Recipient : "
+        + recipients[i]
+        + "\nMessage : "
+        + msg;
+        }
+
+    }
+
+    return "Message not found.";
+}
+      
+      public static String searchRecipient(String number) {
+
+    String result = "";
+
+    for (int i = 0; i < 100; i++) {
+
+        if (recipients[i] != null &&
+                recipients[i].equals(number)) {
+
+            if (sentMessages[i] != null) {
+
+                result += sentMessages[i] + "\n";
+
+            }
+
+            if (storedMessages[i] != null) {
+
+                result += storedMessages[i] + "\n";
+
+            }
+
+        }
+
+    }
+if (result.equals("")) {
+    return "No messages found.";
+}
+
+return result;
+}
+      
+      public static String deleteMessage(String hash) {
+
+    for (int i = 0; i < 100; i++) {
+
+        if (messageHashes[i] != null &&
+                messageHashes[i].equals(hash)) {
+
+         String deleted = sentMessages[i];
+
+if (deleted == null) {
+    deleted = storedMessages[i];
+}
+            sentMessages[i] = null;
+            storedMessages[i] = null;
+            messageHashes[i] = null;
+            messageIDs[i] = null;
+            recipients[i] = null;
+
+            return "Message \""
+                    + deleted
+                    + "\" successfully deleted.";
+
+        }
+
+    }
+
+    return "Hash not found.";
+}
+      
+      
     /**
      * Displays message details.
      *

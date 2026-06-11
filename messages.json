@@ -1,7 +1,42 @@
 {
-    "recipient": "+27896567890",
-    "messageID": "6125077960",
-    "messageHash": "61:0:HELLOHELLO",
+    "recipient": "+27843433663",
+    "messageID": "1758332921",
+    "messageHash": "17:1:BYEBYE",
+    "message": "bye bye ",
+    "status": "Stored"
+}
+{
+    "recipient": "+27855754646",
+    "messageID": "8047854039",
+    "messageHash": "80:1:MOJAMOJA",
+    "message": "moja",
+    "status": "Stored"
+}
+{
+    "recipient": "+27893333344",
+    "messageID": "5953190259",
+    "messageHash": "59:2:MOJAMOJA",
+    "message": "MOJA",
+    "status": "Stored"
+}
+{
+    "recipient": "+27843635241",
+    "messageID": "5860294333",
+    "messageHash": "58:2:NIGGANIGGA",
+    "message": "nigga",
+    "status": "Stored"
+}
+{
+    "recipient": "+27854544455",
+    "messageID": "8337245120",
+    "messageHash": "83:0:HELLOHELLO",
+    "message": "hello",
+    "status": "Stored"
+}
+{
+    "recipient": "+27846464646",
+    "messageID": "3842109484",
+    "messageHash": "38:0:HELLOHELLO",
     "message": "hello",
     "status": "Stored"
 }
