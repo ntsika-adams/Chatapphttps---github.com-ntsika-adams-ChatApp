@@ -1,9 +1,9 @@
 # ChatApp Part-3
 
 ## Student Information
--Name:Ntsika
--Student Number:ST10525355
--Module:PROG5121
+- Name:Ntsika
+- Student Number:ST10525355
+- Module:PROG5121
 ---
 
 ## Project Information
@@ -11,11 +11,11 @@ The code is altered in the main java,message java and message test so that it ca
 display message report,searches messages ,search recipient and display sender and recipient
 
 ---
-### Features
-- User registration and login
-- Send messages
-- Store messages
-- Search messages
-- Delete messages
-- Display message reports
+## Features
+### User registration and login
+### Send messages
+### Store messages
+### Search messages
+### Delete messages
+### Display message reports
 
