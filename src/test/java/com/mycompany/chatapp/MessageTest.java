@@ -5,24 +5,41 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for Message class.
+ * Unit tests for the Message class.
+ * These tests verify message validation, hashing,
+ * recipient formatting, message ID generation,
+ * and message sending functionality.
  */
 public class MessageTest {
 
+    // Test message objects used throughout the test cases
     private Message message1;
     private Message message2;
 
     /**
-     * Helper class to simulate user choices.
+     * Inner helper class used to simulate the different
+     * menu options returned by the sentMessage() method.
      */
     private class TestableMessage extends Message {
 
+        // Stores the simulated user option
         private final int option;
 
+        /**
+         * Constructor that accepts a simulated menu choice.
+         *
+         * @param option user-selected option
+         */
         public TestableMessage(int option) {
             this.option = option;
         }
 
+        /**
+         * Overrides sentMessage() to return predetermined
+         * values without requiring user input.
+         *
+         * @return result message based on selected option
+         */
         @Override
         public String sentMessage() {
 
@@ -36,19 +53,19 @@ public class MessageTest {
     }
 
     /**
-     * Creates fresh objects before every test.
+     * Creates fresh test objects before each test method executes.
      */
     @Before
     public void setUp() {
 
-        // Message 1
+        // Create first test message
         message1 = new Message(0);
         message1.setRecipient("+27718693002");
         message1.setMessageText(
                 "Hi Mike, can you join us for dinner tonight?");
         message1.setMessageID("0012345678");
 
-        // Message 2
+        // Create second test message
         message2 = new Message(1);
         message2.setRecipient("08575975889");
         message2.setMessageText(
@@ -56,6 +73,10 @@ public class MessageTest {
         message2.setMessageID("0098765432");
     }
 
+    /**
+     * Tests that a valid message under 250 characters
+     * is accepted successfully.
+     */
     @Test
     public void testCheckMessageLength_validMessage_returnsSuccess() {
 
@@ -65,6 +86,10 @@ public class MessageTest {
         assertEquals("Message ready to send.", result);
     }
 
+    /**
+     * Tests that a message exceeding 250 characters
+     * returns the correct error and excess count.
+     */
     @Test
     public void testCheckMessageLength_over250chars_returnsFailureWithCount() {
 
@@ -77,6 +102,10 @@ public class MessageTest {
                 result);
     }
 
+    /**
+     * Tests that a message exactly 250 characters long
+     * is considered valid.
+     */
     @Test
     public void testCheckMessageLength_exactlyAtLimit_returnsSuccess() {
 
@@ -87,6 +116,10 @@ public class MessageTest {
         assertEquals("Message ready to send.", result);
     }
 
+    /**
+     * Tests that a message exceeding the limit by one character
+     * returns the correct validation message.
+     */
     @Test
     public void testCheckMessageLength_oneOver_returnsFailureWithCountOf1() {
 
@@ -99,6 +132,10 @@ public class MessageTest {
                 result);
     }
 
+    /**
+     * Tests that a correctly formatted international
+     * recipient number is accepted.
+     */
     @Test
     public void testCheckRecipientCell_validNumber_returnsSuccess() {
 
@@ -109,6 +146,10 @@ public class MessageTest {
                 result);
     }
 
+    /**
+     * Tests that an incorrectly formatted phone number
+     * returns the appropriate error message.
+     */
     @Test
     public void testCheckRecipientCell_invalidNumber_returnsFailure() {
 
@@ -119,6 +160,10 @@ public class MessageTest {
                 result);
     }
 
+    /**
+     * Tests that the generated message hash ends
+     * with the expected message words.
+     */
     @Test
     public void testCreateMessageHash_correctFormat_endsWithExpectedWords() {
 
@@ -127,6 +172,10 @@ public class MessageTest {
         assertTrue(hash.endsWith(":0:HITONIGHT?"));
     }
 
+    /**
+     * Tests that the generated message hash
+     * is entirely uppercase.
+     */
     @Test
     public void testCreateMessageHash_isUppercase() {
 
@@ -135,6 +184,10 @@ public class MessageTest {
         assertEquals(hash.toUpperCase(), hash);
     }
 
+    /**
+     * Tests hash generation for multiple messages
+     * using a loop to verify expected keywords.
+     */
     @Test
     public void testCreateMessageHash_multipleMessages_loopTest() {
 
@@ -150,6 +203,10 @@ public class MessageTest {
         }
     }
 
+    /**
+     * Tests that the generated message ID
+     * is not null.
+     */
     @Test
     public void testCheckMessageID_generatedID_isNotNull() {
 
@@ -158,12 +215,20 @@ public class MessageTest {
                 message1.getMessageID());
     }
 
+    /**
+     * Tests that the generated message ID
+     * satisfies the required validation rules.
+     */
     @Test
     public void testCheckMessageID_generatedID_isExactly10Chars() {
 
         assertTrue(message1.checkMessageID());
     }
 
+    /**
+     * Tests that selecting the Send option
+     * returns the correct confirmation message.
+     */
     @Test
     public void testSentMessage_userSelectsSend_returnsCorrectString() {
 
@@ -174,6 +239,10 @@ public class MessageTest {
                 testMessage.sentMessage());
     }
 
+    /**
+     * Tests that selecting the Delete option
+     * returns the correct instruction message.
+     */
     @Test
     public void testSentMessage_userSelectsDisregard_returnsCorrectString() {
 
@@ -184,6 +253,10 @@ public class MessageTest {
                 testMessage.sentMessage());
     }
 
+    /**
+     * Tests that selecting the Store option
+     * returns the correct confirmation message.
+     */
     @Test
     public void testSentMessage_userSelectsStore_returnsCorrectString() {
 
