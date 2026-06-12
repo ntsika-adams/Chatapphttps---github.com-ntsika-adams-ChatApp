@@ -61,10 +61,11 @@ public class Main {
                 while (running) {
                     
                     System.out.println("\n=== Main Menu ===");
-                    System.out.println("1) Send Messages");
-                    System.out.println("2) Show recently sent messages");
-                    System.out.println("3) Quit");
-                    
+                  System.out.println("1) Send Messages");
+System.out.println("2) Show recently sent messages");
+System.out.println("3) Stored Messages");
+System.out.println("4) Quit");
+
                     System.out.print("Enter option: ");
                     
                     int choice;
@@ -84,31 +85,107 @@ public class Main {
                         continue;
                     }
                     
-                    switch (choice) {
-                        
-                        case 1 -> sendMessages(scanner);
-                            
-                        case 2 -> System.out.println("Coming Soon.");
-                            
-                        case 3 -> {
-                            running = false;
-                            System.out.println(
-                                    "Thank you for using ChatApp.");
-                        }
-                            
-                        default -> System.out.println(
-                                    "Invalid option. Please select 1, 2, or 3.");
-                    }
+                   switch (choice) {
+
+    case 1 -> sendMessages(scanner);
+
+    case 2 -> {
+
+        Message.displayReport();
+
+    }
+
+    case 3 -> {
+
+        boolean menu = true;
+
+        while (menu) {
+
+            System.out.println();
+
+            System.out.println("1. Display Sender and Recipient");
+
+            System.out.println("2. Longest Stored Message");
+
+            System.out.println("3. Search Message ID");
+
+            System.out.println("4. Search Recipient");
+
+            System.out.println("5. Delete by Hash");
+
+            System.out.println("6. Display Report");
+
+            System.out.println("7. Back");
+
+            int option = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (option) {
+
+                case 1 -> Message.displayReport();
+
+                case 2 -> System.out.println(
+                        Message.displayLongestMessage());
+
+                case 3 -> {
+
+                    System.out.print("Enter ID: ");
+
+                    String id = scanner.nextLine();
+
+                    System.out.println(
+                            Message.searchMessageID(id));
                 }
-                
-            } else {
-                
-                System.out.println(
-                        "Login failed. Access denied.");
+
+                case 4 -> {
+
+                    System.out.print("Recipient: ");
+
+                    String number = scanner.nextLine();
+
+                    System.out.println(
+                            Message.searchRecipient(number));
+                }
+
+                case 5 -> {
+
+                    System.out.print("Hash: ");
+
+                    String hash = scanner.nextLine();
+
+                    System.out.println(
+                            Message.deleteMessage(hash));
+                }
+
+                case 6 -> Message.displayReport();
+
+                case 7 -> menu = false;
+
+                default -> System.out.println("Invalid option");
+
+            }
+
+        }
+
+    }
+
+    case 4 -> {
+
+        running = false;
+
+        System.out.println(
+                "Thank you for using ChatApp.");
+
+    }
+
+    default -> System.out.println(
+            "Invalid option.");
+
+}
+                }
             }
         }
     }
-
     /**
      * Handles sending messages.
      *
